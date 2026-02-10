@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="VLA-JEPA: Enhancing Vision-Language-Action Model with Latent World Model">
+  <meta name="keywords" content="VLA, JEPA, Vision-Language-Action, Latent World Model, Robot Learning, Pretraining">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VLA-JEPA: Enhancing Vision-Language-Action Model with Latent World Model</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"/>
+  <link href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.4/dist/css/bulma-carousel.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="./static/css/own.min.css">
+  <link rel="stylesheet" href="./static/css/custom.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <!-- Scripts -->
+  <script defer src="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.4/dist/js/bulma-carousel.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title" style="font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif; font-size: 52px; font-weight: 600; letter-spacing: -0.5px; line-height: 1.2;">
+              VLA-JEPA
+              <br>
+              <span style="font-size: 36px; font-weight: 500;">Enhancing Vision-Language-Action Model</span>
+              <br>
+              <span style="font-size: 36px; font-weight: 500;">with Latent World Model</span>
+          </h1>
+
+          <div class="is-size-5 publication-authors" style="margin-top: 20px;">
+            <span class="author-block">
+              <a>Jingwen Sun<sup>1,2*</sup></a></span>,
+            <span class="author-block">
+              <a href="https://zhangwenyao1.github.io/">Wenyao Zhang<sup>3,5*</sup></a></span>,
+            <span class="author-block">
+              <a href="https://qizekun.github.io/">Zekun Qi<sup>4</sup></a></span>,
+            <span class="author-block">
+              <a>Shaojie Ren<sup>2,6</sup></a></span>,
+            <span class="author-block">
+              <a>Zezhi Liu<sup>2,7</sup></a></span>,
+            <br>
+            <span class="author-block">
+              <a>Hanxin Zhu<sup>1</sup></a></span>,
+            <span class="author-block">
+              <a>Guangzhong Sun<sup>1</sup></a></span>,
+            <span class="author-block">
+              <a>Xin Jin<sup>2,5&dagger;</sup></a></span>,
+            <span class="author-block">
+              <a>Zhibo Chen<sup>1,2&dagger;</sup></a></span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">* equal contribution</span>
+            <span class="author-block">&dagger; corresponding author</span>
+          </div>
+          <div class="is-size-5 publication-authors" style="margin-top: 5px;">
+            <span class="author-block"><sup>1</sup>University of Science and Technology of China</span>
+            <span class="author-block"><sup>2</sup>Zhongguancun Academy</span>
+            <span class="author-block"><sup>3</sup>Shanghai Jiao Tong University</span>
+            <br>
+            <span class="author-block"><sup>4</sup>Tsinghua University</span>
+            <span class="author-block"><sup>5</sup>Eastern Institute of Technology</span>
+            <span class="author-block"><sup>6</sup>University of Chinese Academy of Sciences</span>
+            <span class="author-block"><sup>7</sup>Nankai University</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+
+              <span class="link-block">
+                <a href="#"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/ginwind/VLA-JEPA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+   <div class="container is-fullhd">
+    <div class="my-block">
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified" style="max-width: 1000px; margin: 0 auto;">
+            <p>
+              Pretraining Vision-Language-Action (VLA) policies on internet-scale video is appealing, yet current latent-action objectives often learn the wrong thing: they remain anchored to pixel variation rather than action-relevant state transitions, making them vulnerable to appearance bias, nuisance motion, and information leakage.
+              We introduce <b style="color: #fe8e8e">VLA-JEPA</b>, a <b>JEPA-style pretraining framework</b> that sidesteps these pitfalls by design.
+              The key idea is <b style="color: #fe8e8e">leakage-free state prediction</b>: a target encoder produces latent representations from future frames, while the student pathway sees only the current observation&mdash;future information is used solely as supervision targets, never as input.
+              By predicting in <b>latent space</b> rather than pixel space, VLA-JEPA learns dynamics abstractions that are robust to camera motion and irrelevant background changes.
+              This yields a simple <b style="color: #fe8e8e">two-stage recipe</b>&mdash;JEPA pretraining followed by action-head fine-tuning&mdash;without the multi-stage complexity of prior latent-action pipelines.
+              Experiments on <b>LIBERO</b>, <b>LIBERO-Plus</b>, <b>SimplerEnv</b> and <b>real-world</b> manipulation tasks show that VLA-JEPA achieves consistent gains in sample efficiency and generalization over existing methods.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Teaser Image -->
+  <div class="container is-fullhd">
+    <div class="my-block">
+      <div class="has-text-centered">
+        <img src="images/teaser.png"
+             class="interpolation-image"
+             style="max-width: 95%;"
+             alt="VLA-JEPA Architecture"/>
+        <p style="margin-top: 15px; font-size: 14px; color: #666; text-align: justify; max-width: 95%; margin-left: auto; margin-right: auto;">
+          <b>VLA-JEPA model architecture.</b>
+          A target encoder produces latent targets from future frames, while the student pathway sees only the current observation through a VLM backbone. A predictor maps the history latent states and the latent action representations to future latent states, trained as a latent world model using a JEPA alignment loss. Future frames are never provided as inputs to the VLM backbone; they are used solely to construct training targets.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container is-fullhd">
+    <div class="my-block">
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <h2 class="title is-3">Highlights</h2>
+          <div class="content has-text-justified" style="max-width: 1000px; margin: 0 auto;">
+            <p>
+                1. We analyze why many <b>latent-action pretraining</b> objectives remain pixel-tethered, becoming biased toward appearance, vulnerable to nuisance motion, and prone to <b style="color: #fe8e8e">information leakage</b> when future context enters the learner.
+            </p>
+            <p>
+                2. We propose <b style="color: #fe8e8e">VLA-JEPA</b>, a JEPA-style latent predictive alignment scheme that learns <b>action-relevant transition semantics</b> by predicting and aligning future latent states&mdash;without pixel reconstruction, information leakage and only one-stage pretraining pipeline.
+            </p>
+            <p>
+                3. VLA-JEPA yields consistent gains in <b style="color: #fe8e8e">sample efficiency</b>, <b>robustness</b>, and <b>generalization</b> across embodied control benchmarks (LIBERO, LIBERO-Plus, SimplerEnv) and real-world settings, while simplifying training relative to prior multi-stage latent-action pipelines.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container is-fullhd">
+    <div class="my-block">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Method Overview</h2>
+
+          <div class="has-text-centered">
+            <img src="images/vla_jepa_framework.png"
+                 class="interpolation-image"
+                 style="max-width: 95%;"
+                 alt="VLA-JEPA Framework"/>
+          </div>
+
+          <h2 class="content has-text-justified" style="margin-top: 20px;">
+              <b>VLA-JEPA Framework.</b> We adopt a VLM backbone with learnable latent action tokens. For action-free human videos, VLA-JEPA extracts latent actions via a world-model-based state transition objective using a V-JEPA2 encoder. For robot demonstrations, a flow-matching action head generates precise end-effector trajectories. During fine-tuning, both objectives are jointly optimized, enabling learned state-transition dynamics to be effectively leveraged for downstream robotic control.
+          </h2>
+
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container is-fullhd">
+    <div class="my-block">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Comparison with Prior VLA Methods</h2>
+        <p class="content has-text-justified" style="margin-bottom: 20px;">
+          We identify four failure modes in existing latent-action pretraining pipelines: pixel-level objectives biased toward appearance, amplified noisy motion from real-world videos, information leakage causing latent-action collapse, and fragile multi-stage training pipelines. VLA-JEPA addresses all of these issues by design.
+        </p>
+
+        <div class="has-text-centered" style="margin-bottom: 30px;">
+          <img src="images/attention_map.png"
+               class="interpolation-image"
+               style="max-width: 95%;"
+               alt="Attention Map Visualization"/>
+          <p style="margin-top: 15px; font-size: 14px; color: #666; text-align: justify; max-width: 95%; margin-left: auto; margin-right: auto;">
+            <b>Visualization of the attention weight matrix of latent action tokens attending to image tokens.</b>
+            LAPA's latent actions focus on excessively dense visual information including operation-irrelevant details. UniVLA overemphasizes semantics, attending to irrelevant background elements. VLA-JEPA focuses precisely on the robotic arm, the hand, and the objects to be manipulated.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container is-fullhd">
+    <div class="my-block">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Experiments Setup</h2>
+
+        <div class="has-text-centered">
+          <img src="images/experiments_setup.png"
+               class="interpolation-image"
+               style="max-width: 95%;"
+               alt="Experiments Setup"/>
+          <p style="margin-top: 15px; font-size: 14px; color: #666;">
+            Experiments setup on LIBERO, LIBERO-Plus, SimplerEnv and real-world Franka robot. We evaluate VLA-JEPA on 3 simulation benchmarks and 1 real-world environment.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container is-fullhd">
+    <div class="my-block">
+      <div class="column is-full-width">
+        <h2 class="title is-3">LIBERO Benchmark Results</h2>
+        <p class="content has-text-justified" style="margin-bottom: 20px;">
+          VLA-JEPA achieves state-of-the-art performance on the LIBERO benchmark with the highest average success rate, outperforming methods that rely on extensive robot datasets for pre-training.
+        </p>
+
+        <div class="table-container">
+          <table class="table is-striped is-narrow is-fullwidth comparison-table">
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Spatial</th>
+                <th>Object</th>
+                <th>Goal</th>
+                <th>LIBERO-10</th>
+                <th>Avg</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>LAPA</td>
+                <td>73.8</td>
+                <td>74.6</td>
+                <td>58.8</td>
+                <td>55.4</td>
+                <td>65.7</td>
+              </tr>
+              <tr>
+                <td>UniVLA</td>
+                <td>96.5</td>
+                <td>96.8</td>
+                <td>95.6</td>
+                <td>92.0</td>
+                <td>95.2</td>
+              </tr>
+              <tr>
+                <td>OpenVLA-OFT</td>
+                <td><u>97.6</u></td>
+                <td>98.4</td>
+                <td><u>97.9</u></td>
+                <td><u>94.5</u></td>
+                <td><u>97.1</u></td>
+              </tr>
+              <tr>
+                <td>&pi;<sub>0</sub></td>
+                <td>96.8</td>
+                <td><u>98.8</u></td>
+                <td>95.8</td>
+                <td>85.2</td>
+                <td>94.2</td>
+              </tr>
+              <tr>
+                <td>&pi;<sub>0</sub>-Fast</td>
+                <td>96.4</td>
+                <td>96.8</td>
+                <td>88.6</td>
+                <td>60.2</td>
+                <td>85.5</td>
+              </tr>
+              <tr>
+                <td>CoT-VLA</td>
+                <td>87.5</td>
+                <td>91.6</td>
+                <td>87.6</td>
+                <td>69.0</td>
+                <td>81.1</td>
+              </tr>
+              <tr>
+                <td>WorldVLA</td>
+                <td>87.6</td>
+                <td>96.2</td>
+                <td>83.4</td>
+                <td>60.0</td>
+                <td>81.8</td>
+              </tr>
+              <tr>
+                <td>villa-X</td>
+                <td>97.5</td>
+                <td>97.0</td>
+                <td>91.5</td>
+                <td>74.5</td>
+                <td>90.1</td>
+              </tr>
+              <tr>
+                <td>GR00T N1</td>
+                <td>94.4</td>
+                <td>97.6</td>
+                <td>93.0</td>
+                <td>90.6</td>
+                <td>93.9</td>
+              </tr>
+              <tr>
+                <td>&pi;<sub>0.5</sub></td>
+                <td><b>98.8</b></td>
+                <td>98.2</td>
+                <td><b>98.0</b></td>
+                <td>92.4</td>
+                <td>96.9</td>
+              </tr>
+              <tr class="highlight-row">
+                <td><b>VLA-JEPA (ours)</b></td>
+                <td>96.2</td>
+                <td><b>99.6</b></td>
+                <td>97.2</td>
+                <td><b>95.8</b></td>
+                <td><b>97.2</b></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container is-fullhd">
+    <div class="my-block">
+      <div class="column is-full-width">
+        <h2 class="title is-3">SimplerEnv Benchmark Results</h2>
+        <p class="content has-text-justified" style="margin-bottom: 20px;">
+          On SimplerEnv, VLA-JEPA achieves the highest average success rate on the Google Robot and competitive results on WidowX Robot, while using less than 1% of the training data compared to methods like villa-X.
+        </p>
+
+        <div class="table-container" style="overflow-x: auto;">
+          <table class="table is-striped is-narrow is-fullwidth comparison-table">
+            <thead>
+              <tr>
+                <th rowspan="2">Method</th>
+                <th colspan="5" style="text-align: center; border-bottom: 1px solid #e2e8f0;">Google Robot</th>
+                <th colspan="5" style="text-align: center; border-bottom: 1px solid #e2e8f0;">WidowX Robot</th>
+              </tr>
+              <tr>
+                <th>Pick</th>
+                <th>Move</th>
+                <th>Drawer</th>
+                <th>Place</th>
+                <th>Avg</th>
+                <th>Spoon</th>
+                <th>Carrot</th>
+                <th>Block</th>
+                <th>Eggplant</th>
+                <th>Avg</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>LAPA*</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td><u>70.8</u></td>
+                <td>45.8</td>
+                <td><b>54.2</b></td>
+                <td>58.3</td>
+                <td><b>57.3</b></td>
+              </tr>
+              <tr>
+                <td>villa-X</td>
+                <td>81.7</td>
+                <td>55.4</td>
+                <td>38.4</td>
+                <td>4.2</td>
+                <td>44.9</td>
+                <td>48.3</td>
+                <td>24.2</td>
+                <td>19.2</td>
+                <td>71.7</td>
+                <td>40.8</td>
+              </tr>
+              <tr>
+                <td>RoboVLMs</td>
+                <td>77.3</td>
+                <td>61.7</td>
+                <td>43.5</td>
+                <td>24.1</td>
+                <td>51.7</td>
+                <td>45.8</td>
+                <td>20.8</td>
+                <td>4.2</td>
+                <td><b>79.2</b></td>
+                <td>37.5</td>
+              </tr>
+              <tr>
+                <td>&pi;<sub>0</sub></td>
+                <td>72.7</td>
+                <td>65.3</td>
+                <td>38.3</td>
+                <td>-</td>
+                <td>-</td>
+                <td>29.1</td>
+                <td>0</td>
+                <td>16.6</td>
+                <td>62.5</td>
+                <td>40.1</td>
+              </tr>
+              <tr>
+                <td>&pi;<sub>0</sub>-Fast</td>
+                <td>75.3</td>
+                <td><u>67.5</u></td>
+                <td>42.9</td>
+                <td>-</td>
+                <td>-</td>
+                <td>29.1</td>
+                <td>21.9</td>
+                <td>10.8</td>
+                <td>66.7</td>
+                <td><u>48.3</u></td>
+              </tr>
+              <tr class="highlight-row">
+                <td><b>VLA-JEPA (ours)</b></td>
+                <td><b>88.3</b></td>
+                <td>64.1</td>
+                <td><u>59.3</u></td>
+                <td><u>49.1</u></td>
+                <td><u>65.2</u></td>
+                <td><b>75.0</b></td>
+                <td><b>70.8</b></td>
+                <td>12.5</td>
+                <td>70.8</td>
+                <td><b>57.3</b></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container is-fullhd">
+    <div class="my-block">
+      <div class="column is-full-width">
+        <h2 class="title is-3">LIBERO-Plus Robustness Results</h2>
+        <p class="content has-text-justified" style="margin-bottom: 20px;">
+          VLA-JEPA achieves the best performance on 5 out of 7 perturbations in LIBERO-Plus, demonstrating significant advantages under Language, Light, Background, and Layout perturbations. This verifies that our latent action can effectively handle task-agnostic disturbances.
+        </p>
+
+        <div class="table-container">
+          <table class="table is-striped is-narrow is-fullwidth comparison-table">
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Camera</th>
+                <th>Robot</th>
+                <th>Language</th>
+                <th>Light</th>
+                <th>Background</th>
+                <th>Noise</th>
+                <th>Layout</th>
+                <th>Avg</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>UniVLA</td>
+                <td>1.8</td>
+                <td>46.2</td>
+                <td>69.6</td>
+                <td>69.0</td>
+                <td>81.0</td>
+                <td>21.2</td>
+                <td>31.9</td>
+                <td>42.9</td>
+              </tr>
+              <tr>
+                <td>OpenVLA-OFT</td>
+                <td>56.4</td>
+                <td>31.9</td>
+                <td><u>79.5</u></td>
+                <td><u>88.7</u></td>
+                <td><u>93.3</u></td>
+                <td><u>75.8</u></td>
+                <td>74.2</td>
+                <td><u>69.6</u></td>
+              </tr>
+              <tr>
+                <td>&pi;<sub>0</sub></td>
+                <td>13.8</td>
+                <td>6.0</td>
+                <td>58.8</td>
+                <td>85.0</td>
+                <td>81.4</td>
+                <td><b>79.0</b></td>
+                <td>68.9</td>
+                <td>53.6</td>
+              </tr>
+              <tr>
+                <td>&pi;<sub>0</sub>-Fast</td>
+                <td><b>65.1</b></td>
+                <td>21.6</td>
+                <td>61.0</td>
+                <td>73.2</td>
+                <td>73.2</td>
+                <td>74.4</td>
+                <td>68.8</td>
+                <td>61.6</td>
+              </tr>
+              <tr>
+                <td>WorldVLA</td>
+                <td>0.1</td>
+                <td>27.9</td>
+                <td>41.6</td>
+                <td>43.7</td>
+                <td>17.1</td>
+                <td>10.9</td>
+                <td>38.0</td>
+                <td>25.0</td>
+              </tr>
+              <tr class="highlight-row">
+                <td><b>VLA-JEPA (ours)</b></td>
+                <td><u>63.3</u></td>
+                <td><b>67.1</b></td>
+                <td><b>85.4</b></td>
+                <td><b>95.6</b></td>
+                <td><b>93.6</b></td>
+                <td>66.3</td>
+                <td><b>85.1</b></td>
+                <td><b>79.5</b></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container is-fullhd">
+    <div class="my-block">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Impact of Human Video Data</h2>
+          <h2 class="content has-text-justified">
+              Human video data primarily enhances the <b>robustness and stability</b> of the VLA model by strengthening its existing skill repertoire, rather than introducing new action execution capabilities. As the scale of human video data increases, the robustness of the resulting policy consistently improves.
+          </h2>
+          <div class="has-text-centered">
+            <img src="images/human_video_proportion.png"
+                 class="interpolation-image"
+                 style="max-width: 70%;"
+                 alt="Human Video Proportion Analysis"/>
+          </div>
+          <p class="has-text-centered" style="margin-top: 10px; font-size: 14px; color: #666;">
+            Effect of the proportion of human video data in pre-training on success rates across different perturbation dimensions on the LIBERO-Plus benchmark.
+          </p>
+        </div>
+    </div>
+  </div>
+
+
+  <div class="container is-fullhd">
+    <div class="my-block">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Real-World Experiments</h2>
+          <h2 class="content has-text-justified">
+              We evaluate VLA-JEPA on table-top manipulation tasks using a Franka Research 3 arm. VLA-JEPA achieves state-of-the-art performance under both in-distribution and object layout out-of-distribution settings. Notably, VLA-JEPA acquires the skill of <b>repeated grasping</b>&mdash;reopening the gripper to attempt another grasp after a failure&mdash;a capability not observed in &pi;<sub>0</sub> or &pi;<sub>0.5</sub>.
+          </h2>
+          <div class="has-text-centered">
+            <img src="images/realworld_figure.png"
+                 class="interpolation-image"
+                 style="max-width: 75%;"
+                 alt="Real-World Experimental Results"/>
+          </div>
+          <p class="has-text-centered" style="margin-top: 10px; font-size: 14px; color: #666;">
+            Real-world experimental results comparing VLA-JEPA with &pi;<sub>0</sub> and &pi;<sub>0.5</sub> across in-distribution, task OOD, and layout OOD settings.
+          </p>
+        </div>
+    </div>
+  </div>
+
+
+  <div class="container is-fullhd">
+    <div class="my-block">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Ablation: Video Horizon</h2>
+
+          <p class="content has-text-justified" style="margin-bottom: 20px;">
+            The model achieves its best performance when the video horizon is close to the predefined action horizon. When T is too small, the encoded information is insufficient; when T is too large, redundant information is introduced.
+          </p>
+
+          <div class="table-container" style="max-width: 700px; margin: 0 auto;">
+            <table class="table is-striped is-narrow is-fullwidth comparison-table">
+              <thead>
+                <tr>
+                  <th>T</th>
+                  <th>Spatial</th>
+                  <th>Object</th>
+                  <th>Goal</th>
+                  <th>LIBERO-10</th>
+                  <th>Avg</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>4</td>
+                  <td><b>95.0</b></td>
+                  <td>99.2</td>
+                  <td>95.8</td>
+                  <td>89.0</td>
+                  <td>94.8</td>
+                </tr>
+                <tr class="highlight-row">
+                  <td><b>8</b></td>
+                  <td>94.8</td>
+                  <td><b>99.8</b></td>
+                  <td>95.8</td>
+                  <td><b>94.0</b></td>
+                  <td><b>96.1</b></td>
+                </tr>
+                <tr>
+                  <td>16</td>
+                  <td>92.8</td>
+                  <td>98.8</td>
+                  <td><b>98.0</b></td>
+                  <td>92.2</td>
+                  <td>95.5</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+  </div>
+
+
+</section>
+
+<style>
+  .comparison-table {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .comparison-table thead th {
+    text-align: center;
+    font-weight: 600;
+    line-height: 1.3;
+    background: #f8fafc;
+    color: #2d3748;
+    padding: 12px 8px;
+  }
+
+  .comparison-table tbody td {
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    padding: 10px 8px;
+    font-size: 14px;
+  }
+
+  .comparison-table tbody td:first-child,
+  .comparison-table thead th:first-child {
+    text-align: left;
+    padding-left: 16px;
+  }
+
+  .comparison-table tbody tr:hover {
+    background-color: rgba(102, 126, 234, 0.04);
+  }
+
+  .highlight-row {
+    background: linear-gradient(90deg, #e8f5e9, #c8e6c9) !important;
+    font-weight: 600;
+  }
+
+  .highlight-row td {
+    color: #2e7d32;
+  }
+</style>
+
+<div>
+  <div class="container is-max-widescreen content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{vlajepa2025,
+      title={VLA-JEPA: Enhancing Vision-Language-Action Model with Latent World Model},
+      author={Sun, Jingwen and Zhang, Wenyao and Qi, Zekun and Ren, Shaojie and Liu, Zezhi and Zhu, Hanxin and Sun, Guangzhong and Jin, Xin and Chen, Zhibo},
+      journal={arXiv preprint arXiv:25xx.xxxxx},
+      year={2025}
+    }</code></pre>
+    </div>
+  </div>
+</div>
+
+
+<footer class="footer">
+    <div class="content has-text-centered">
+      <p>
+        Website template from <a href="https://qizekun.github.io/humanoid-gpt/">Humanoid-GPT</a>.
+      </p>
+    </div>
+</footer>
+
+
+</body>
+</html>
