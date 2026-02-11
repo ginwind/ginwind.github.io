@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"/>
   <link href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.4/dist/css/bulma-carousel.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@latest/css/academicons.min.css">
   <link rel="stylesheet" href="./static/css/own.min.css">
   <link rel="stylesheet" href="./static/css/custom.css">
   <link rel="stylesheet" href="./static/css/index.css">
@@ -79,7 +80,7 @@
             <div class="publication-links">
 
               <span class="link-block">
-                <a href="#"
+                <a href="https://arxiv.org/abs/2602.10098"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="ai ai-arxiv"></i>
@@ -127,13 +128,58 @@
     </div>
   </div>
 
+
+  <!-- Real-World Demos -->
+  <section class="section" id="real-world-demos">
+    <div class="container is-fullhd">
+      <div class="my-block">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Real-World Demos</h2>
+
+          <div class="columns is-multiline">
+            <div class="column is-half">
+              <video controls preload="metadata" style="width:100%;height:auto;border-radius:8px;">
+                <source src="./demos/vla-jepa/id1.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="column is-half">
+              <video controls preload="metadata" style="width:100%;height:auto;border-radius:8px;">
+                <source src="./demos/vla-jepa/repeat2.mp4" type="video/mp4">
+              </video>
+            </div>
+
+            <div class="column is-full">
+              <p style="text-align:center;margin-top:8px;font-weight:600;">In-Distribution Evaluation</p>
+            </div>
+
+            <div class="column is-half">
+              <video controls preload="metadata" style="width:100%;height:auto;border-radius:8px;">
+                <source src="./demos/vla-jepa/ood1.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="column is-half">
+              <video controls preload="metadata" style="width:100%;height:auto;border-radius:8px;">
+                <source src="./demos/vla-jepa/ood2.mp4" type="video/mp4">
+              </video>
+            </div>
+
+            <div class="column is-full">
+              <p style="text-align:center;margin-top:8px;font-weight:600;">Out-of-Distribution Evaluation</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Teaser Image -->
   <div class="container is-fullhd">
     <div class="my-block">
       <div class="has-text-centered">
         <img src="images/teaser.png"
              class="interpolation-image"
-             style="max-width: 95%;"
+             style="max-width: 60%;"
              alt="VLA-JEPA Architecture"/>
         <p style="margin-top: 15px; font-size: 14px; color: #666; text-align: justify; max-width: 95%; margin-left: auto; margin-right: auto;">
           <b>VLA-JEPA model architecture.</b>
@@ -596,6 +642,51 @@
           <p class="has-text-centered" style="margin-top: 10px; font-size: 14px; color: #666;">
             Real-world experimental results comparing VLA-JEPA with &pi;<sub>0</sub> and &pi;<sub>0.5</sub> across in-distribution, task OOD, and layout OOD settings.
           </p>
+          
+          <!-- Compact 2x3 Demos (inserted at request) -->
+          <section class="section" id="compact-demos" style="padding: 12px 0;">
+            <div class="container is-fullhd">
+              <div class="my-block">
+                <div class="compact-grid" style="display:grid;grid-template-columns:repeat(3,224px);gap:8px;justify-content:center;">
+                  <!-- Column 1 -->
+                  <div class="grid-col" style="text-align:center;padding:6px;">
+                    <video width="224" height="224" controls preload="metadata" style="display:block;margin:0 auto;">
+                      <source src="./demos/pi0/compare1.mp4" type="video/mp4">
+                    </video>
+                    <video width="224" height="224" controls preload="metadata" style="display:block;margin:4px auto 0;">
+                      <source src="./demos/pi0/compare2.mp4" type="video/mp4">
+                    </video>
+                    <p style="margin-top:6px;font-weight:600;">&pi;<sub>0</sub></p>
+                  </div>
+
+                  <!-- Column 2 -->
+                  <div class="grid-col" style="text-align:center;padding:6px;">
+                    <video width="224" height="224" controls preload="metadata" style="display:block;margin:0 auto;">
+                      <source src="./demos/pi05/compare1.mp4" type="video/mp4">
+                    </video>
+                    <video width="224" height="224" controls preload="metadata" style="display:block;margin:4px auto 0;">
+                      <source src="./demos/pi05/compare2.mp4" type="video/mp4">
+                    </video>
+                    <p style="margin-top:6px;font-weight:600;">&pi;<sub>0.5</sub></p>
+                  </div>
+
+                  <!-- Column 3 -->
+                  <div class="grid-col" style="text-align:center;padding:6px;">
+                    <video width="224" height="224" controls preload="metadata" style="display:block;margin:0 auto;">
+                      <source src="./demos/vla-jepa/compare1.mp4" type="video/mp4">
+                    </video>
+                    <video width="224" height="224" controls preload="metadata" style="display:block;margin:4px auto 0;">
+                      <source src="./demos/vla-jepa/compare2.mp4" type="video/mp4">
+                    </video>
+                    <p style="margin-top:6px;font-weight:600;">VLA-JEPA</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <h2 class="content has-text-justified">
+            As shown in the videos above, we observed that when the collected data used for fine-tuning does not contain repeated grasping actions, VLA-JEPA successfully learns the skill of repeated grasping, a capability not observed in &pi;<sub>0</sub> and &pi;<sub>0.5</sub>.
+          </h2>
         </div>
     </div>
   </div>
@@ -703,13 +794,16 @@
 <div>
   <div class="container is-max-widescreen content">
     <h2 class="title">BibTeX</h2>
-    <pre><code>@article{vlajepa2025,
-      title={VLA-JEPA: Enhancing Vision-Language-Action Model with Latent World Model},
-      author={Sun, Jingwen and Zhang, Wenyao and Qi, Zekun and Ren, Shaojie and Liu, Zezhi and Zhu, Hanxin and Sun, Guangzhong and Jin, Xin and Chen, Zhibo},
-      journal={arXiv preprint arXiv:25xx.xxxxx},
-      year={2025}
+    <pre><code>@misc{vlajepa2026,
+          title={VLA-JEPA: Enhancing Vision-Language-Action Model with Latent World Model}, 
+          author={Jingwen Sun and Wenyao Zhang and Zekun Qi and Shaojie Ren and Zezhi Liu and Hanxin Zhu and Guangzhong Sun and Xin Jin and Zhibo Chen},
+          year={2026},
+          eprint={2602.10098},
+          archivePrefix={arXiv},
+          primaryClass={cs.RO},
+          url={https://arxiv.org/abs/2602.10098}, 
     }</code></pre>
-    </div>
+    </div> 
   </div>
 </div>
 
